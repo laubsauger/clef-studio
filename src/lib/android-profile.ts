@@ -14,7 +14,7 @@ export async function cancelAndroid(serial: string) {
 export function immediateAndroidProfile(screen: AndroidScreen): ProfileCollection {
   return { photos: [screen.image], text: aggregateProfileText([screen.text]), bioScreens: screen.expanded ? 1 : 0 }
 }
-export async function androidStep(serial: string, action: 'capture' | 'open-bio' | 'scroll-bio' | 'close-bio' | 'previous-photo' | 'next-photo', expected?: AndroidScreen['profile']) {
+export async function androidStep(serial: string, action: 'capture' | 'open-bio' | 'scroll-bio' | 'scroll-bio-up' | 'close-bio' | 'previous-photo' | 'next-photo', expected?: AndroidScreen['profile']) {
   const response = await fetch('/api/android/profile-step', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ serial, action, expected }), signal: AbortSignal.timeout(45000) })
   const body = await response.json()
   if (!response.ok) throw new Error(body.error)
@@ -101,9 +101,22 @@ export async function collectAndroidProfile(initial: AndroidScreen, serial: stri
     current = await androidStep(serial, action, initial.profile)
     return current
   }
-  if (initial.expanded) await step('close-bio', 'Returning to the full-photo view…')
+  function visibleSignature(screen: AndroidScreen) {
+    return screen.text.lines.filter(line => line.role !== 'header').map(line => `${key(line.text)}:${Math.round(line.bounds.y * screen.height)}:${Math.round(line.bounds.height * screen.height)}`).join('\n')
+  }
+  if (!initial.expanded) await step('open-bio', 'Opening the full profile and photo gallery…')
+  else if (!initial.pager) {
+    let atTop = false
+    for (let page = 0; page < 10; page++) {
+      const before = visibleSignature(current)
+      await step('scroll-bio-up', 'Returning to the profile photos…')
+      text.push(current.text)
+      if (before === visibleSignature(current)) { atTop = true; break }
+    }
+    if (!atTop) throw new Error('Could not verify the top of the expanded profile after 10 screens. Collection stopped.')
+  }
   const pager = current.pager
-  if (!pager) throw new Error('The profile photo index is unavailable in the photo view.')
+  if (!pager) throw new Error('The photo pager is unavailable in the expanded profile.')
   function gather() {
     const index = current.pager!.index
     if (photos[index]) return
@@ -117,17 +130,15 @@ export async function collectAndroidProfile(initial: AndroidScreen, serial: stri
     while (direction === -1 ? current.pager!.index > 0 : current.pager!.index < pager.count - 1) {
       const index = current.pager!.index + direction
       await step(direction === -1 ? 'previous-photo' : 'next-photo', `Capturing photo ${index + 1} / ${pager.count}…`)
-      if (!current.pager || current.pager.count !== pager.count || current.pager.index !== index) throw new Error('Photo indicators did not advance as expected. Collection stopped.')
+      if (!current.expanded || !current.pager || current.pager.count !== pager.count || current.pager.index !== index) throw new Error('Expanded photo indicators did not advance as expected. Collection stopped.')
       gather()
     }
   }
-  await step('open-bio', 'Opening the profile details…')
   let bioScreens = 0, complete = false, lastSignature: string | undefined
   for (let page = 0; page < 10; page++) {
     text.push(current.text); bioScreens++
     onProgress(`Reading expanded details · screen ${bioScreens}`, current, aggregateProfileText(text))
-    const visible = current.text.lines.filter(line => line.role !== 'header' && line.bounds.y >= 0.15 && line.bounds.y < 1)
-    const signature = visible.map(line => `${key(line.text)}:${Math.round(line.bounds.y * current.height)}:${Math.round(line.bounds.height * current.height)}`).join('\n')
+    const signature = visibleSignature(current)
     if (signature === lastSignature) { complete = true; break }
     lastSignature = signature
     await step('scroll-bio', `Reading profile details · screen ${page + 2}…`)

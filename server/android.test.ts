@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { photoPagerFromUI } from './android-ui.ts'
+import { photoPagerFromUI, photoNavigationFromUI, nativeProfileFromUI } from './android-ui.ts'
 import { androidRequestSchema } from './android.ts'
 import { aggregateProfileText } from '../src/lib/android-profile.ts'
 
@@ -46,6 +46,55 @@ test('accessibility retains section labels and clipped native text without OCR c
   assert.equal(profile.bio, 'My full paragraph includes text under the floating buttons.')
   assert.deepEqual(profile.sections, { Essentials: ['165 cm'], 'My perfect Sunday': ['Coffee and hiking'] })
   assert.doesNotMatch(native.text.text, /Maya/)
+  assert.deepEqual(photoNavigationFromUI(native, 'next', 100, 200), { kind: 'swipe', from: 80, to: 20, y: 75 })
+  assert.deepEqual(photoNavigationFromUI(native, 'previous', 100, 200), { kind: 'swipe', from: 20, to: 80, y: 75 })
+  assert.throws(() => photoNavigationFromUI({ ...native, pager: undefined, photo: undefined }, 'next', 100, 200), /pager is not visible/)
+  assert.throws(() => photoNavigationFromUI({ ...native, pager: { index: 4, count: 5 } }, 'next', 100, 200), /first or last/)
+  assert.throws(() => photoNavigationFromUI({ ...native, photo: { x: 0, y: 160, width: 100, height: 40 } }, 'next', 100, 200), /matching actions/)
+})
+
+test('home photo navigation keeps using its native tap controls', () => {
+  const xml = `<hierarchy><node package="com.tinder" focusable="true" content-desc="Photo by Sofia, 2 of 3" bounds="[0,0][100,200]"><node resource-id="com.tinder:id/recs_card_user_headline_name" text="Sofia," bounds="[10,10][40,30]"/><node resource-id="com.tinder:id/recs_card_user_headline_age" text="29" bounds="[40,10][60,30]"/><node content-desc="Previous Media" bounds="[0,50][50,140]"/><node content-desc="Next Media" bounds="[50,50][100,140]"/></node></hierarchy>`
+  const native = nativeProfileFromUI(xml, 100, 200)
+  assert.deepEqual(photoNavigationFromUI(native, 'next', 100, 200), { kind: 'tap', x: 75, y: 95 })
+  assert.deepEqual(photoNavigationFromUI(native, 'previous', 100, 200), { kind: 'tap', x: 25, y: 95 })
+})
+
+test('full collection returns from scrolled details to the gallery without closing and captures only expanded frames', async () => {
+  const { collectAndroidProfile } = await import('../src/lib/android-profile.ts')
+  const originalFetch = globalThis.fetch
+  let index = 1, atTop = false, upward = 0
+  const actions: string[] = [], captured: string[] = []
+  const frame = (top: boolean, offset = .4) => {
+    const source = screen(top ? ['About Me', 'The full biography.'] : ['Lifestyle', 'Non-smoker'])
+    const lines = source.lines.map((line, i) => ({ ...line, role: i === 0 ? 'header' as const : i === 1 ? 'heading' as const : 'text' as const, section: i === 0 ? '' : top ? 'About Me' : 'Lifestyle', bounds: { ...line.bounds, y: i === 0 ? .02 : offset + i * .05 } }))
+    return { image: `data:image/png;base64,${index === 0 ? 'AA==' : 'AQ=='}`, width: 1080, height: 2340, profile: { name: 'Sofia', age: 29 }, expanded: true, ...(top ? { pager: { index, count: 2 } } : {}), text: { ...source, engine: 'Android accessibility' as const, lines, ...(top ? { photo_count: 2 } : {}) } }
+  }
+  globalThis.fetch = async (_url, options) => {
+    const body = JSON.parse(options!.body as string); actions.push(body.action)
+    assert.deepEqual(body.expected, { name: 'Sofia', age: 29 })
+    if (body.action === 'scroll-bio-up') { upward++; atTop = true }
+    else if (body.action === 'previous-photo') { assert.equal(atTop, true); index-- }
+    else if (body.action === 'scroll-bio') atTop = false
+    else assert.equal(body.action, 'close-bio')
+    const next = frame(atTop, upward === 1 ? .2 : .4)
+    if (body.action === 'close-bio') next.expanded = false
+    return new Response(JSON.stringify(next), { headers: { 'Content-Type': 'application/json' } })
+  }
+  try {
+    const collection = await collectAndroidProfile(frame(false), 'test-phone', () => {}, () => false, image => captured.push(image))
+    assert.deepEqual(actions, ['scroll-bio-up', 'scroll-bio-up', 'scroll-bio-up', 'previous-photo', 'scroll-bio', 'scroll-bio', 'close-bio'])
+    assert.deepEqual(collection.photos, ['data:image/png;base64,AA==', 'data:image/png;base64,AQ=='])
+    assert.equal(captured.length, 2)
+    assert.equal(collection.text.profile.bio, 'The full biography.')
+    assert.deepEqual(collection.text.profile.sections.Lifestyle, ['Non-smoker'])
+    assert.equal(collection.text.profile.photo_count, 2)
+    index = 1; atTop = true; actions.length = 0; captured.length = 0
+    const alreadyExpanded = await collectAndroidProfile(frame(true), 'test-phone', () => {}, () => false, image => captured.push(image))
+    assert.deepEqual(actions, ['previous-photo', 'scroll-bio', 'scroll-bio', 'close-bio'])
+    assert.deepEqual(alreadyExpanded.photos, collection.photos)
+    assert.equal(captured.length, 2)
+  } finally { globalThis.fetch = originalFetch }
 })
 
 test('native tags become labelled attributes after expansion without duplicated home text', () => {

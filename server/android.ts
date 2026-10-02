@@ -1,11 +1,11 @@
 import { execFile } from 'node:child_process'
 import { setTimeout } from 'node:timers/promises'
 import { z } from 'zod'
-import { nativeProfileFromUI, nativeProfileIdentity, NativeProfileUnavailable } from './android-ui.ts'
+import { nativeProfileFromUI, nativeProfileIdentity, NativeProfileUnavailable, photoNavigationFromUI } from './android-ui.ts'
 import { androidHierarchy } from './android-bridge.ts'
 
 const serialSchema = z.string().regex(/^[a-zA-Z0-9_.:-]{1,128}$/)
-export const androidRequestSchema = z.object({ serial: serialSchema, action: z.enum(['capture', 'open-bio', 'scroll-bio', 'close-bio', 'previous-photo', 'next-photo']), expected: z.object({ name: z.string().min(1), age: z.number().int().min(18).max(120) }).optional() }).superRefine((value, context) => { if (value.action !== 'capture' && !value.expected) context.addIssue({ code: 'custom', message: 'A verified profile is required before sending input.' }) })
+export const androidRequestSchema = z.object({ serial: serialSchema, action: z.enum(['capture', 'open-bio', 'scroll-bio', 'scroll-bio-up', 'close-bio', 'previous-photo', 'next-photo']), expected: z.object({ name: z.string().min(1), age: z.number().int().min(18).max(120) }).optional() }).superRefine((value, context) => { if (value.action !== 'capture' && !value.expected) context.addIssue({ code: 'custom', message: 'A verified profile is required before sending input.' }) })
 
 function adb(args: string[], signal?: AbortSignal): Promise<Buffer> {
   return new Promise((resolve, reject) => execFile('adb', args, { encoding: 'buffer', signal, timeout: 12000, maxBuffer: 8 * 1024 * 1024 }, (error, stdout, stderr) => {
@@ -75,27 +75,34 @@ export async function androidStep(body: z.infer<typeof androidRequestSchema>) {
     if (body.action !== 'capture') {
       const focus = (await request(['-s', body.serial, 'shell', 'dumpsys', 'window', 'displays'])).toString()
       if (!/mCurrentFocus=.*\bcom\.tinder\//.test(focus)) throw new Error('Tinder must be the foreground app before sending profile input.')
-      if (['open-bio', 'previous-photo', 'next-photo'].includes(body.action) && screen.expanded) throw new Error('Close the expanded profile before navigating its photos.')
-      if (['scroll-bio', 'close-bio'].includes(body.action) && !screen.expanded) throw new Error('The bio is no longer open. Collection stopped before sending input.')
-      if (body.action === 'scroll-bio') {
+      if (body.action === 'open-bio' && screen.expanded) throw new Error('The expanded profile is already open.')
+      if (['scroll-bio', 'scroll-bio-up', 'close-bio'].includes(body.action) && !screen.expanded) throw new Error('The bio is no longer open. Collection stopped before sending input.')
+      if (body.action === 'previous-photo' || body.action === 'next-photo') {
+        const gesture = photoNavigationFromUI(screen, body.action === 'next-photo' ? 'next' : 'previous', screen.width, screen.height)
+        if (gesture.kind === 'swipe') await request(['-s', body.serial, 'shell', 'input', 'swipe', String(gesture.from), String(gesture.y), String(gesture.to), String(gesture.y), '180'])
+        else await request(['-s', body.serial, 'shell', 'input', 'tap', String(gesture.x), String(gesture.y)])
+      } else if (body.action === 'scroll-bio' || body.action === 'scroll-bio-up') {
         if (!screen.scroll) throw new Error('The profile scroll container is unavailable.')
         const box = screen.scroll
         const x = Math.round(box.x + box.width * 0.5)
         const from = Math.round(Math.min(box.y + box.height * 0.66, screen.height * 0.72))
         const to = Math.round(box.y + box.height * 0.22)
-        await request(['-s', body.serial, 'shell', 'input', 'swipe', String(x), String(from), String(x), String(to), '450'])
+        await request(['-s', body.serial, 'shell', 'input', 'swipe', String(x), String(body.action === 'scroll-bio' ? from : to), String(x), String(body.action === 'scroll-bio' ? to : from), '450'])
       } else {
-        const box = body.action === 'open-bio' ? screen.open : body.action === 'close-bio' ? screen.close : body.action === 'previous-photo' ? screen.previous : screen.next
+        const box = body.action === 'open-bio' ? screen.open : screen.close
         if (!box) throw new Error('Tinder did not expose the requested profile control.')
         const x = Math.round(box.x + box.width / 2)
         const y = Math.round(box.y + box.height / 2)
         if (y >= screen.height * 0.78) throw new Error('The detected control overlaps the matching action area. Capture stopped.')
-        if (body.action === 'next-photo' && screen.pager?.index === screen.pager!.count - 1 || body.action === 'previous-photo' && screen.pager?.index === 0) throw new Error('Already at the first or last photo; collection stopped before tapping.')
         await request(['-s', body.serial, 'shell', 'input', 'tap', String(x), String(y)])
       }
       await setTimeout(250, undefined, { signal })
       const after = await readScreen(true)
       if (after.profile.name !== screen.profile.name || after.profile.age !== screen.profile.age) throw new Error('The profile changed after navigation. Collection stopped.')
+      if (body.action === 'next-photo' || body.action === 'previous-photo') {
+        const expectedIndex = screen.pager!.index + (body.action === 'next-photo' ? 1 : -1)
+        if (after.expanded !== screen.expanded || after.pager?.count !== screen.pager!.count || after.pager?.index !== expectedIndex) throw new Error('The photo pager did not advance as expected. Collection stopped.')
+      }
       if (body.action === 'open-bio' && !after.expanded || body.action === 'close-bio' && after.expanded) throw new Error('The expected bio view did not open or close. Collection stopped.')
       screen = after
     }

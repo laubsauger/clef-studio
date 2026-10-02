@@ -502,8 +502,8 @@ test('Android full read collects all details without OCR, then scores and review
   await page.route('**/api/android/profile-step', async route => {
     const body = route.request().postDataJSON(); actions.push(body.action)
     if (body.action !== 'capture') expect(body.expected).toEqual({ name: 'Sofia', age: 29 })
-    if (body.action === 'previous-photo') { if (actions.length === 2) await captureGate; index-- }
-    if (body.action === 'next-photo') index++
+    if (body.action === 'previous-photo') { expect(expanded).toBe(true); if (actions.length === 3) await captureGate; index-- }
+    if (body.action === 'next-photo') { expect(expanded).toBe(true); index++ }
     if (body.action === 'open-bio') { expanded = true; detailPage = 0 }
     if (body.action === 'scroll-bio') detailPage = 1
     if (body.action === 'close-bio') expanded = false
@@ -537,7 +537,7 @@ test('Android full read collects all details without OCR, then scores and review
   await expect(state).toHaveValue(/"My perfect Sunday"/)
   const profile = JSON.parse(await state.inputValue())
   expect(profile).toMatchObject({ name: 'Sofia', age: 29, distance_km: 12, photo_count: 3, bio: 'A complete paragraph, including text under the buttons.', interests: ['Nature'], sections: { Essentials: ['165 cm'], Lifestyle: ['Non-smoker'], 'Relationship goals': ['Short-term fun'], 'My perfect Sunday': ['Coffee and hiking'] } })
-  expect(actions).toEqual(['capture', 'previous-photo', 'previous-photo', 'open-bio', 'scroll-bio', 'scroll-bio', 'close-bio'])
+  expect(actions).toEqual(['capture', 'open-bio', 'previous-photo', 'previous-photo', 'scroll-bio', 'scroll-bio', 'close-bio'])
   expect(requests).toHaveLength(0); expect(ocrCalls).toBe(0)
   await page.getByRole('button', { name: 'Focus view', exact: true }).click()
   await page.getByRole('button', { name: 'Read + decide', exact: true }).click()

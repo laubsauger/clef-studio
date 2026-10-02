@@ -73,17 +73,33 @@ export function nativeProfileFromUI(output: string, width: number, height: numbe
     if (id.endsWith('/bio_element')) lines.push({ text: 'About Me', confidence: 1, role: 'heading', bounds: normalized(node) })
     lines.push({ text, confidence: 1, role: /\/(infoViewTitle|expandableViewTitle)$/.test(id) ? 'heading' : 'text', section: id.endsWith('/bio_element') ? 'About Me' : sections.get(node) ?? '', ...(groups.has(node) ? { group: groups.get(node) } : {}), bounds: normalized(node) })
   }
-  let pager
+  let pager, photo
   if (expanded) {
     const media = body.find(node => attr(node, 'resource-id') === 'com.tinder:id/pager')
     const match = media && attr(media, 'content-desc').match(/^Profile Media, Photo, (\d+) of (\d+)$/)
     if (media && !match) throw new Error('Tinder returned unreadable expanded photo metadata.')
     if (match) {
+      photo = bounds(media!)
       pager = { index: Number(match[1]) - 1, count: Number(match[2]) }
       if (pager.count < 1 || pager.count > 12 || pager.index < 0 || pager.index >= pager.count) throw new Error('Tinder returned an invalid expanded photo index.')
     }
   } else pager = photoPagerFromUI(output, name)
   const text: ProfileText = { engine: 'Android accessibility', text: lines.map(line => line.text).join('\n'), lines, ...(pager ? { photo_count: pager.count } : {}), width, height, recognition_ms: 0 }
   const control = (description: string) => { const node = body.find(node => attr(node, 'content-desc') === description); return node ? bounds(node) : undefined }
-  return { profile, expanded, pager, text, close: close ? bounds(close) : undefined, scroll: expanded ? bounds(contentRoot) : undefined, open: control('Open profile'), next: control('Next Media'), previous: control('Previous Media') }
+  return { profile, expanded, pager, photo, text, close: close ? bounds(close) : undefined, scroll: expanded ? bounds(contentRoot) : undefined, open: control('Open profile'), next: control('Next Media'), previous: control('Previous Media') }
+}
+
+export function photoNavigationFromUI(screen: ReturnType<typeof nativeProfileFromUI>, direction: 'next' | 'previous', width: number, height: number) {
+  const pager = screen.pager
+  if (!pager) throw new Error('The photo pager is not visible. Scroll to the profile photos before navigating.')
+  if (direction === 'next' ? pager.index === pager.count - 1 : pager.index === 0) throw new Error('Already at the first or last photo; collection stopped before navigating.')
+  const box = screen.expanded ? screen.photo : direction === 'next' ? screen.next : screen.previous
+  if (!box || box.width <= 0 || box.height <= 0 || box.x < 0 || box.y < 0 || box.x + box.width > width || box.y + box.height > height) throw new Error('Tinder did not expose a valid photo navigation area.')
+  const y = Math.round(box.y + box.height / 2)
+  if (y >= height * .78) throw new Error('The photo navigation area overlaps matching actions. Collection stopped.')
+  if (screen.expanded) {
+    const right = Math.round(box.x + box.width * .8), left = Math.round(box.x + box.width * .2)
+    return { kind: 'swipe' as const, from: direction === 'next' ? right : left, to: direction === 'next' ? left : right, y }
+  }
+  return { kind: 'tap' as const, x: Math.round(box.x + box.width / 2), y }
 }
