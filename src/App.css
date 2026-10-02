@@ -204,6 +204,7 @@ button { transition:background 140ms,border-color 160ms,color 140ms,box-shadow 2
 .reference-result { margin-top:6px; padding:7px 10px; }.reference-result p { margin-top:4px; }
 .probability-row>div:first-child { font-size:12px; }
 .many-options-workspace { height:max(560px,58vh); max-height:650px; }
+.experiment-workspace:has(.extra-answer):has(.probability-row:nth-child(4)) { min-height:520px; }
 @container(max-width:370px) { .stream-controls>div:first-child>span:nth-child(2) { display:none; }.interval-slider { width:45px; }.decision-summary { gap:8px; }.probability-large { font-size:31px; } }
 @media(max-width:690px) { .many-options-workspace { height:auto; max-height:none; }.many-options-workspace .decision-panel { height:560px; } }
 .many-options-workspace:has(.extra-answer) { height:max(620px,58vh); }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, ChevronRight, Clapperboard, Code2, Database, Scale, FlaskConical, Heart, HelpCircle, History as HistoryIcon, Leaf, Camera, Pizza, Palette, Paintbrush, Presentation, Box, Laptop, Maximize2, Monitor, Pause, Play, Plus, Settings2, Sparkles, Square, ScanText, LoaderCircle, Video, X, Zap, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, ChevronRight, Clapperboard, Code2, Database, Scale, FlaskConical, Heart, HelpCircle, History as HistoryIcon, Leaf, Camera, Pizza, Palette, Paintbrush, Box, Laptop, Maximize2, Monitor, Pause, Play, Plus, Settings2, Sparkles, Square, ScanText, LoaderCircle, Video, X, Zap, PanelLeftClose, PanelLeftOpen, ScanFace, CupSoda } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
@@ -32,7 +32,7 @@ import './profile-ocr.css'
 type ActiveDecision = { id: string; experiment: string; provider: string; startedAt: string }
 type Status = { local: { status: string; error?: string; activeDecision?: ActiveDecision | null }; activeDecision?: ActiveDecision | null; ocr?: { available: boolean; engine: string }; cloudflare: { configured: boolean } }
 type Settings = { state: string; rules: string; format: 'text' | 'json'; questions: Questions }
-const icons: Record<string, typeof Heart> = { match: Heart, thumbnail: Clapperboard, market: Sparkles, neat: Presentation, ui: Monitor, custom: Plus, plant: Leaf, fit: Heart, snack: Pizza, art: Paintbrush, desk: Monitor, 'profile-facts': Camera, color: Palette, object: Box }
+const icons: Record<string, typeof Heart> = { match: Heart, thumbnail: Clapperboard, market: Sparkles, ui: Monitor, custom: Plus, plant: Leaf, fit: Heart, snack: Pizza, art: Paintbrush, desk: Monitor, 'profile-facts': Camera, age: ScanFace, soda: CupSoda, color: Palette, object: Box }
 const navExperiments = experiments.filter(e => e.id !== 'custom')
 const initialSettings = Object.fromEntries(experiments.map(e => [e.id, { state: e.state, rules: e.rules, format: 'text' as const, questions: e.questions }]))
 

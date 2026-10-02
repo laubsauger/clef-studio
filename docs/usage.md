@@ -17,7 +17,6 @@ Edit the question schema to change the outputs. The editor highlights JSON, chec
 | Dating profiles | Profile images plus explicit preferences and profile details |
 | Thumbnail check | Cover images and video frames |
 | Marketplace finds | Listing photos, prices and requirements |
-| Neat / not | A friend's app screenshots or slides; judges style, beauty and polish |
 | Interface critic | Screenshots with clipping, overlap or readability issues |
 | Plant check | Visible leaf condition and a tentative next action |
 | Hot / not | A subjective attraction rubric for adults or adult fictional characters |
@@ -25,6 +24,8 @@ Edit the question schema to change the outputs. The editor highlights JSON, chec
 | Art / trash | Artwork and your own aesthetic taste |
 | Desk verdict | Desk organization, judged from visible objects |
 | Presentation | Visible styling and presentation, without inferring gender identity |
+| Age estimator | Face photos or a webcam; apparent age ranges with per-range probabilities |
+| Soda can / pop tab | Beverage cans; tab present, missing, not visible, or no can, plus can-presence probability |
 | Color check | Known color swatches with an expected answer |
 | Object check | Object categories; the chair sample has an expected answer |
 | Build your own | Arbitrary text, JSON or images with editable questions and rules |

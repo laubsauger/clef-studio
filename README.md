@@ -2,7 +2,7 @@
 
 A local playground for Clef decision models on Apple Silicon. Give it text, JSON or an image, set your rules, and see how it scores the options. Webcam and screen sharing work too.
 
-[![Clef Studio evaluating an app design and showing its scores](docs/images/studio.gif)](docs/images/studio.png)
+[![Clef Studio identifying a chair and showing its probabilities](docs/images/studio.gif)](docs/images/studio.png)
 
 ## Run it
 

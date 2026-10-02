@@ -193,7 +193,7 @@ test('preset results fit the panel and do not move the workspace', async ({ page
   await page.setViewportSize({ width: 1475, height: 768 })
   await page.route('**/api/decide', route => route.fulfill({ json: result(route.request().postDataJSON().questions) }))
   await page.goto('/')
-  for (const name of ['Dating profiles', 'Thumbnail check', 'Marketplace finds', 'Neat / not', 'Plant check', 'Hot / not', 'Snack court', 'Art / trash', 'Desk verdict', 'Presentation', 'Color check', 'Object check']) {
+  for (const name of ['Dating profiles', 'Thumbnail check', 'Marketplace finds', 'Plant check', 'Hot / not', 'Snack court', 'Art / trash', 'Desk verdict', 'Presentation', 'Age estimator', 'Soda can / pop tab', 'Color check', 'Object check']) {
     await page.getByRole('button', { name: new RegExp(name) }).click()
     await expect(page.getByRole('heading', { name: 'Ready to evaluate' })).toBeVisible()
     await page.waitForTimeout(250)
@@ -205,7 +205,6 @@ test('preset results fit the panel and do not move the workspace', async ({ page
     expect(await page.locator('.decision-body').evaluate(el => el.scrollHeight <= el.clientHeight + 1)).toBe(true)
     const after = await page.locator('.experiment-workspace').boundingBox()
     expect(after!.height).toBeCloseTo(before!.height, 1); expect(after!.y).toBeCloseTo(before!.y, 1)
-    if (name === 'Neat / not') await page.screenshot({ path: test.info().outputPath('clef-neat.png'), fullPage: true })
   }
   await expect(page.locator('.rules-editor .context-footer')).toContainText('chars')
   await page.screenshot({ path: test.info().outputPath('clef-compact-color.png'), fullPage: true })

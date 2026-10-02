@@ -18,6 +18,8 @@ The JPEG samples in `public/samples` (`profile-female.jpg`, `thumbnail.jpg`, `ma
 
 The Sofia sample profile is fictional. Its biography and preferences do not describe the person in the photograph. The SVG samples and studio favicon were created for this project.
 
+The user-supplied `soda-tab-missing.webp` photograph retains its original copyright; the application's MIT license does not relicense it.
+
 ## Dependencies
 
 JavaScript and Python packages retain their own licenses. Dependency versions are recorded in `package-lock.json`, `runtime/uv.lock` and `benchmarks/uv.lock`; installed packages include their upstream notices. Inter and DM Mono are distributed through Fontsource with their font licenses, and the interface uses Lucide icons and shadcn components.
