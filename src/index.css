@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--secondary);
+  --color-muted-foreground: #94a0ae;
+  --color-accent: #202a35;
+  --color-accent-foreground: var(--foreground);
+  --color-border: #2b3642;
+  --color-input: #2b3642;
+  --color-ring: #ec7749;
+  --color-destructive: #e56c68;
+  --color-popover: #171f29;
+  --color-popover-foreground: var(--foreground);
+}
+:root { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #e5eaf0; background: #0e1319; color-scheme: dark; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; --background: #151c24; --foreground: #e5eaf0; --primary: #ee885e; --primary-foreground: #13171c; --secondary: #252f3b; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 360px; }
+button, input, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled) { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+button:focus-visible, a:focus-visible { outline: 2px solid #e66b3f; outline-offset: 4px; }
+a { color: inherit; text-decoration: none; }
+button { transition: background 160ms, border-color 160ms, opacity 160ms; }
+::selection { background: #784b36; color: #ffffff; }

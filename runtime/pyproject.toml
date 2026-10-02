@@ -1,0 +1,16 @@
+[project]
+name = "clef-studio-runtime"
+description = "Local Clef-flash inference on Apple Silicon with PyTorch MPS."
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "torch>=2.11,<2.12",
+  "torchvision>=0.26,<0.27",
+  "transformers==5.10.2",
+  "accelerate>=1.10,<2",
+  "huggingface-hub>=1,<2",
+  "pillow>=11,<13",
+  "fastapi>=0.115,<1",
+  "uvicorn>=0.34,<1",
+  "uiautomator2>=3.7.0",
+]

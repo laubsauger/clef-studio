@@ -1,0 +1,109 @@
+.state-actions { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+.profile-ocr-button { height:28px; padding:0 6px; gap:5px; color:#d0bdea; font-size:10px; }
+.profile-ocr-mode { display:flex; align-items:center; gap:6px; color:#b4a0d0; }
+.resume-preview { position:absolute; bottom:12px; left:12px; z-index:4; padding:0 10px; border:1px solid #526577; color:#d9e8f0; background:#152332ed; backdrop-filter:blur(10px); font-size:11px; }
+.ocr-spinner { animation:ocr-spin 900ms linear infinite; }
+@keyframes ocr-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .ocr-spinner { animation:none; } }
+
+.state-footer-actions { display:flex; align-items:center; gap:10px; }
+.ocr-inspect { color:#d0bdea; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+.ocr-inspect:hover { color:#eadcff; }
+.ocr-evidence pre { white-space:pre-wrap; }
+
+.profile-ocr-panel { flex-shrink:0; margin:0; padding:9px 16px; border:0; border-top:1px solid #49395e; border-radius:0; background:#20182bc0; }
+.profile-ocr-toolbar,.profile-ocr-toolbar>div,.profile-clean-preview>div { display:flex; align-items:center; gap:6px; }
+.profile-ocr-toolbar { justify-content:space-between; gap:4px; }
+.profile-ocr-toolbar>span { display:flex; align-items:center; gap:5px; color:#b9a4d1; font:9px 'DM Mono',monospace; white-space:nowrap; }
+.profile-ocr-toolbar button { font-size:10px; height:24px; padding:0 7px; }
+.profile-ocr-hint { margin:6px 0 0; color:#9484a9; font-size:10px; }
+.profile-clean-preview { margin-top:7px; color:#d6c8e7; font-size:11px; }
+.profile-clean-preview>div { flex-wrap:wrap; gap:5px 9px; }
+.profile-clean-preview strong { font-weight:600; }
+.profile-clean-preview span { font-size:10px; color:#a593bd; }
+.profile-clean-preview button { margin-left:auto; font-size:9px; color:#bfa8dc; cursor:pointer; }
+.profile-interest-preview,.profile-bio-preview { margin:5px 0 0; font-size:10px; line-height:1.55; color:#b4a4c8; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.profile-capture-options { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:7px; }
+.profile-source { display:flex; align-items:center; gap:5px; font-size:10px; color:#bba5d5; cursor:pointer; }
+.profile-capture-options>div { display:flex; gap:2px; padding:2px; border:1px solid #58446f; border-radius:5px; background:#17111e; }
+.profile-capture-options>div button { padding:3px 8px; border-radius:3px; color:#9a88af; font-size:10px; cursor:pointer; transition:background 150ms,color 150ms; }
+.profile-capture-options button[aria-pressed=true] { background:#543967; color:#eadcf6; }
+.profile-capture-options button:disabled { opacity:.45; cursor:default; }
+.profile-read-progress { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px; color:#d4bceb; font-size:11px; }
+.profile-scores { flex-shrink:0; padding:9px 16px; background:#19231f; border-top:1px solid #384e44; color:#c6e1d2; }
+.profile-score-heading,.profile-score-heading>span { display:flex; align-items:center; gap:6px; }
+.profile-score-heading { justify-content:space-between; }
+.profile-score-heading>span { font:9px 'DM Mono',monospace; }
+.profile-score-heading small { color:#92af9f; font-size:9px; margin-left:6px; }
+.profile-score-heading>strong { font-size:22px; line-height:1.1; font-variant-numeric:tabular-nums; font-weight:600; }
+.profile-score-strip { display:flex; gap:5px; overflow-x:auto; margin-top:7px; }
+.profile-score-strip button { display:flex; align-items:center; gap:8px; flex-shrink:0; padding:5px 7px; border:1px solid #394c42; border-radius:4px; font-size:10px; background:#142019; cursor:pointer; transition:background 150ms,border-color 150ms; }
+.profile-score-strip button:hover { background:#23392b; border-color:#769b84; }
+.profile-score-strip button:focus-visible { outline:2px solid #a6d3b8; outline-offset:2px; }
+.profile-scores p { color:#90aa9b; font-size:9px; margin:6px 0 0; }
+.profile-read-progress small { font-size:9px; color:#9c88b4; }
+.profile-capture-strip { display:flex; align-items:center; gap:5px; margin-top:8px; overflow-x:auto; }
+.profile-capture-strip>div { position:relative; flex-shrink:0; width:36px; height:54px; border:1px solid #6a527f; border-radius:4px; overflow:hidden; background:#140e1a; }
+.profile-capture-strip img { width:100%; height:100%; object-fit:cover; }
+.profile-capture-strip small { position:absolute; left:2px; bottom:2px; color:#eadcf6; padding:1px 3px; border-radius:2px; background:#140e1ad9; font:8px 'DM Mono',monospace; }
+.profile-capture-strip>div>span { display:block; text-align:center; margin-top:12px; color:#9c88b4; }
+.profile-capture-strip>span { font-size:10px; color:#bba6d2; white-space:nowrap; }
+/* Profile tools sit beside the media so captured controls never steal its height. */
+.input-panel.with-profile-rail { display:grid; grid-template-columns:238px minmax(0,1fr); grid-template-rows:42px minmax(0,1fr) 45px; }
+.with-profile-rail>.panel-heading { grid-column:1/-1; grid-row:1; }
+.input-panel.with-profile-rail>.media-stage { grid-column:2; grid-row:2; height:100%; min-height:0; }
+.with-profile-rail>.source-toolbar { grid-column:2; grid-row:3; flex-wrap:wrap; gap:0; padding:4px; }
+.with-profile-rail>.source-toolbar button { font-size:10px; padding:0 6px; }
+.profile-rail { grid-column:1; grid-row:2/4; min-height:0; min-width:0; display:flex; flex-direction:column; overflow:auto; scrollbar-width:thin; scrollbar-color:#5e4772 #14101b; border-right:1px solid #38404c; background:#15121d; }
+.profile-rail>.profile-ocr-panel { order:0; padding:12px; border-top:0; border-bottom:1px solid #49395e; }
+.profile-rail>.profile-scores { order:1; padding:12px; border-top:0; background:#17201c; }
+.profile-rail>.image-queue { order:1; padding:10px; }
+.profile-rail .profile-capture-options { flex-direction:column; align-items:stretch; gap:9px; margin-bottom:12px; }
+.profile-rail .profile-capture-options>div { width:100%; }
+.profile-rail .profile-capture-options>div button { flex:1; }
+.profile-rail .profile-ocr-toolbar { flex-wrap:wrap; gap:8px; }
+.profile-rail .profile-ocr-toolbar>span { width:100%; }
+.profile-rail .profile-ocr-toolbar>div { width:100%; }
+.profile-rail .profile-ocr-toolbar>div>button:first-child { flex:1; }
+.profile-rail .profile-ocr-toolbar>div>button:nth-child(2) { flex:1.3; }
+.profile-rail .profile-read-progress { flex-direction:column; align-items:stretch; gap:6px; margin-top:10px; line-height:1.5; }
+.profile-rail .profile-read-progress>span { font-size:10px; }
+.profile-rail .profile-clean-preview { margin-top:12px; }
+.profile-rail .profile-clean-preview>div { gap:5px; }
+.profile-rail .profile-clean-preview strong { display:block; width:100%; font-size:12px; }
+.profile-rail .profile-clean-preview button { width:100%; margin:3px 0; text-align:left; }
+.profile-rail .profile-bio-preview { -webkit-line-clamp:4; }
+.profile-rail .profile-score-heading>span { flex-wrap:wrap; }
+.profile-rail .profile-score-heading>span>small { width:100%; margin-left:19px; }
+.profile-photo-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin:11px 0; }
+.profile-photo-grid button { position:relative; min-width:0; height:125px; overflow:hidden; border:1px solid #3d5447; border-radius:6px; background:#0d1511; cursor:pointer; transition:border-color 150ms,box-shadow 150ms; }
+.profile-photo-grid button.selected { border-color:#a5d2b7; box-shadow:0 0 0 1px #a5d2b733; }
+.profile-photo-grid button:hover { border-color:#91b9a1; }
+.profile-photo-grid button img { width:100%; height:100%; object-fit:contain; }
+.profile-photo-grid button>span { position:absolute; inset:auto 0 0; display:flex; align-items:center; justify-content:space-between; padding:5px 6px; background:#0c1613ed; border-top:1px solid #496453; }
+.profile-photo-grid small { font-size:9px; color:#9fbcaa; }
+.profile-photo-grid strong { color:#d8f2e3; font-size:12px; font-variant-numeric:tabular-nums; }
+.profile-photo-grid button:focus-visible { outline:2px solid #b5e4c9; outline-offset:2px; }
+.profile-score-run { width:100%; font-size:11px; }
+.native-profile-workspace { height:clamp(600px,70vh,760px); }
+.focus-mode .native-profile-workspace { height:clamp(620px,78vh,800px); }
+@media(max-width:1100px) { .input-panel.with-profile-rail { grid-template-columns:210px minmax(0,1fr); } .profile-rail>.profile-ocr-panel,.profile-rail>.profile-scores { padding:9px; } }
+@media(max-width:690px) { .input-panel.with-profile-rail { grid-template-columns:175px minmax(0,1fr); height:560px; } .profile-photo-grid button { height:100px; } .with-profile-rail>.source-toolbar button { font-size:9px; } .native-profile-workspace { height:auto; } }
+.profile-photo-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; }
+.profile-photo-grid button { height:93px; }
+.profile-photo-grid button>span { padding:4px; }
+.profile-photo-grid small { font-size:8px; }
+.profile-photo-grid strong { font-size:10px; }
+.profile-photo-grid strong svg { width:10px; height:10px; }
+.input-panel.with-profile-rail.profile-rail-collapsed { grid-template-columns:0 minmax(0,1fr); }
+.profile-rail-collapsed>.profile-rail { visibility:hidden; overflow:hidden; border:0; }
+.return-live-preview { height:24px; font-size:10px; margin-right:8px; }
+@media(max-width:1100px) { .profile-photo-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+.profile-capture-gallery { margin-top:10px; }
+.profile-capture-count { display:flex; justify-content:space-between; align-items:center; color:#bba6d2; font:9px 'DM Mono',monospace; }
+.profile-capture-count strong { font-weight:500; color:#e1d2ef; }
+.profile-capture-strip { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px; overflow:visible; }
+.profile-capture-strip>div { width:auto; height:48px; }
+.profile-session-actions { display:flex; gap:5px; margin-top:8px; }
+.profile-session-actions button { flex:1; font-size:9px; padding:0 5px; }
+.next-profile-detected { margin-top:10px; padding:7px; color:#bee7ce; background:#173326; border:1px solid #416d53; border-radius:4px; font-size:10px; }

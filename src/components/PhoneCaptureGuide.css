@@ -1,0 +1,12 @@
+.phone-platforms { display:flex; gap:4px; padding:4px; margin-bottom:22px; border:1px solid #344454; border-radius:8px; background:#101822; }
+.phone-platforms>button { flex:1; color:#a8bbd0; transition:background 160ms,color 160ms,box-shadow 160ms; }
+.phone-platforms>button[aria-pressed=true] { background:#30302c; color:#f5b88c; box-shadow:0 1px 5px #0003; }
+.phone-step>div { flex:1; min-width:0; }
+.phone-command { display:flex; align-items:center; gap:8px; margin-top:10px; padding:10px; border:1px solid #344454; border-radius:6px; background:#101822; }
+.phone-command>code { flex:1; min-width:0; font:11px/1.8 'DM Mono',monospace; color:#c2d3e6; overflow-wrap:anywhere; }
+.phone-command>button { flex-shrink:0; color:#f0ad82; }
+.phone-copy-status { display:block; min-height:16px; padding-top:3px; font-size:10px; color:#8dd3b7; }
+.phone-install { margin-top:4px; }
+.phone-install>summary { width:fit-content; color:#99b0cb; font-size:11px; cursor:pointer; transition:color 160ms; }
+.phone-install>summary:hover { color:#d0deee; }
+.phone-install .terminal-command { margin-top:10px; font-size:10px; overflow-wrap:anywhere; }

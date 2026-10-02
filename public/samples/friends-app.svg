@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="backdrop" x2="1" y2="1"><stop stop-color="#222e29"/><stop offset="1" stop-color="#111917"/></linearGradient>
+    <linearGradient id="sunset" x2="0" y2="1"><stop stop-color="#e9af84"/><stop offset="1" stop-color="#c3c790"/></linearGradient>
+    <clipPath id="scene"><rect x="333" y="235" width="345" height="242" rx="14"/></clipPath>
+  </defs>
+  <rect width="1200" height="800" fill="url(#backdrop)"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="62" y="59" fill="#b9c6bb" font-size="13" font-weight="600" letter-spacing="2">MY FRIEND MADE AN APP</text>
+    <text x="1138" y="59" fill="#b9c6bb" font-size="13" text-anchor="end">01 / THE GROUP CHAT ESCAPE PLAN</text>
+    <rect x="62" y="92" width="1076" height="613" rx="20" fill="#111815" stroke="#3b4b40"/>
+    <path d="M62 137H1138" stroke="#2d3a31"/>
+    <circle cx="86" cy="115" r="4" fill="#8c9e90"/><circle cx="102" cy="115" r="4" fill="#677c6d"/><circle cx="118" cy="115" r="4" fill="#465e4e"/>
+    <text x="600" y="119" fill="#8fa495" font-size="12" text-anchor="middle">sidequest.local / weekend</text>
+    <path d="M281 137V705" stroke="#2d3a31"/>
+    <rect x="88" y="170" width="30" height="30" rx="9" fill="#d4e8a8"/>
+    <path d="M97 187h12m-6-6v12" stroke="#203225" stroke-width="2.5"/>
+    <text x="130" y="191" fill="#eff1e9" font-size="20" font-weight="700">sidequest</text>
+    <text x="90" y="247" fill="#7f9485" font-size="11" font-weight="600" letter-spacing="1.5">LESS “WE SHOULD HANG”</text>
+    <rect x="79" y="271" width="187" height="42" rx="9" fill="#26362c"/>
+    <text x="101" y="297" fill="#d5e9ae" font-size="14" font-weight="600">Weekend plans</text>
+    <text x="101" y="345" fill="#a6b6aa" font-size="14">The crew</text>
+    <text x="101" y="391" fill="#a6b6aa" font-size="14">Been there</text>
+    <rect x="88" y="591" width="166" height="87" rx="12" fill="#1d2921"/>
+    <text x="103" y="618" fill="#e4e9de" font-size="13" font-weight="600">Actually leave the house.</text>
+    <text x="103" y="640" fill="#99ad9d" font-size="12">A radical new feature.</text>
+    <text x="103" y="661" fill="#d4e8a8" font-size="12">Invite a friend ↗</text>
+    <text x="316" y="187" fill="#91a794" font-size="11" font-weight="600" letter-spacing="1.5">SATURDAY, RECLAIMED</text>
+    <text x="316" y="224" fill="#f0f2e9" font-size="30" font-weight="600">Good plans. Better company.</text>
+    <rect x="971" y="171" width="135" height="37" rx="9" fill="#d4e8a8"/>
+    <text x="1038" y="195" fill="#203225" font-size="13" font-weight="600" text-anchor="middle">+ Make a plan</text>
+    <rect x="316" y="249" width="379" height="335" rx="16" fill="#1b2720" stroke="#314338"/>
+    <g clip-path="url(#scene)" transform="translate(0 31)">
+      <rect x="333" y="235" width="345" height="242" fill="url(#sunset)"/>
+      <circle cx="579" cy="296" r="31" fill="#fff0ba"/>
+      <path d="M333 361Q433 328 509 372T678 346V477H333Z" fill="#718a60"/>
+      <path d="M333 423Q421 347 515 416T678 391V477H333Z" fill="#344f3b"/>
+      <path d="M477 477Q512 426 554 421" fill="none" stroke="#d9cea1" stroke-width="10"/>
+      <rect x="351" y="251" width="105" height="25" rx="12" fill="#192c22"/>
+      <text x="403" y="268" fill="#e6ecd6" font-size="10" font-weight="600" text-anchor="middle">OUTSIDE, FINALLY</text>
+    </g>
+    <text x="334" y="541" fill="#f0f2e9" font-size="19" font-weight="600">Sunset, zero spreadsheets</text>
+    <text x="334" y="566" fill="#a1b5a6" font-size="13">Miradouro · 18:30 · 4 friends in</text>
+    <rect x="713" y="249" width="393" height="153" rx="16" fill="#1b2720" stroke="#314338"/>
+    <text x="735" y="279" fill="#9eb19b" font-size="11" font-weight="600" letter-spacing="1">THE CREW HAS SPOKEN</text>
+    <text x="735" y="315" fill="#f0f2e9" font-size="21" font-weight="600">Pizza wins. Democracy works.</text>
+    <rect x="735" y="341" width="279" height="7" rx="3.5" fill="#344238"/>
+    <rect x="735" y="341" width="218" height="7" rx="3.5" fill="#d4e8a8"/>
+    <text x="735" y="376" fill="#9db3a4" font-size="12">7 votes · one suspiciously passionate debate</text>
+    <rect x="713" y="420" width="393" height="164" rx="16" fill="#d4e8a8"/>
+    <text x="735" y="453" fill="#52633d" font-size="11" font-weight="600" letter-spacing="1">THIS WEEKEND’S ENERGY</text>
+    <text x="735" y="496" fill="#203225" font-size="31" font-weight="600">Low effort.</text>
+    <text x="735" y="532" fill="#203225" font-size="31" font-weight="600">High quality hangs.</text>
+    <text x="735" y="561" fill="#52633d" font-size="12">No twelve-step onboarding required.</text>
+    <path d="M316 611H1106" stroke="#2d3a31"/>
+    <text x="316" y="643" fill="#9caf9f" font-size="12">Next up</text>
+    <text x="386" y="643" fill="#e4e9de" font-size="14">Sunday coffee &amp; a deeply unnecessary pastry</text>
+    <text x="1106" y="643" fill="#c3d7a7" font-size="12" text-anchor="end">See plan ↗</text>
+    <text x="62" y="752" fill="#a6b7a9" font-size="13">Fictional sample · swap in your friend’s screenshots</text>
+    <text x="1138" y="752" fill="#d4e8a8" font-size="13" text-anchor="end">Beautiful or just friend bias?</text>
+  </g>
+</svg>

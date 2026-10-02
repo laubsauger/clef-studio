@@ -1,0 +1,63 @@
+{
+  "name": "clef-studio",
+  "description": "A local sandbox for Clef decision models with text, JSON, images and camera input.",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web \"tsx watch server/index.ts\" \"vite\"",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint --deny-warnings",
+    "server": "tsx server/index.ts",
+    "model:download": "UV_CACHE_DIR=.uv-cache uv run --locked --project runtime python runtime/download.py",
+    "model:download:q8": "UV_CACHE_DIR=.uv-cache uv run --locked --project runtime python runtime/download.py --variant mlx8",
+    "model": "UV_CACHE_DIR=.uv-cache uv run --locked --project runtime python runtime/server.py",
+    "ocr:build": "mkdir -p runtime/bin .build/swift-module-cache && swiftc -O -module-cache-path .build/swift-module-cache runtime/ProfileOCR.swift -o runtime/bin/profile-ocr",
+    "test:ocr": "UV_CACHE_DIR=.uv-cache uv run --locked --project runtime python runtime/test_ocr.py",
+    "test": "npm run test:server && npm run test:ui",
+    "test:server": "tsx --test server/*.test.ts",
+    "test:ui": "playwright test",
+    "test:processor": "UV_CACHE_DIR=.uv-cache uv run --locked --project runtime python runtime/test_processor.py"
+  },
+  "dependencies": {
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/lint": "^6.9.7",
+    "@codemirror/view": "^6.43.13",
+    "@fontsource/dm-mono": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
+    "@lezer/highlight": "^1.2.5",
+    "@tailwindcss/vite": "^4.3.3",
+    "@uiw/react-codemirror": "^4.25.12",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "^18.0.5",
+    "express": "^5.2.1",
+    "fast-xml-parser": "^5.11.2",
+    "lucide-react": "^1.50.0",
+    "motion": "^14.0.0",
+    "radix-ui": "^1.6.7",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.19.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "concurrently": "^10.0.5",
+    "oxlint": "^1.81.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0"
+  }
+}
